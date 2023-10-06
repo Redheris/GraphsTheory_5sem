@@ -1,0 +1,8 @@
+﻿  Main.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+C:\CSIT-Homework\GraphsTheory\GraphsTheory\Main.cpp(24,37): warning C4267: +=: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+  GraphsTheory.vcxproj -> C:\CSIT-Homework\GraphsTheory\x64\Debug\GraphsTheory.exe
