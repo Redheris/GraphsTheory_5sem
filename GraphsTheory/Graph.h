@@ -11,11 +11,12 @@ class Graph
 {
 private:
 	// Список смежности
-	//vector<vector<int>> adjList;
-	map<int, set<int>> adjList;
+	// в-на: (в-на, вес ребра, метка ребра)
+	// map<int, set<int>> adjList;
+	map<int, set<tuple<int, int, string>>> adjList;
 	// Характеристики рёбер(вес и метка),
 	// по умолч. и при остутствии -- 0 и пустая строка соотв.
-	map<pair<int, int>, pair<int, string>> edgeChars;
+	// map<pair<int, int>, pair<int, string>> edgeChars;
 	bool isOriented;
 public:
 	// Добавление новой вершины
@@ -38,10 +39,11 @@ public:
 	// Вывод графа в консоль
 	void printList();
 
-	void setAdjList(map<int, set<int>> adjList);
+	void setAdjList(map<int, set<tuple<int, int, string>>> adjList);
 
-	map<pair<int, int>, pair<int, string>> getEdgeChars();
-	map<int, set<int>> getAdjList();
+	// map<pair<int, int>, pair<int, string>> getEdgeChars();
+	// map<int, set<int>> getAdjList();
+	map<int, set<tuple<int, int, string>>> getAdjList();
 	bool getIsOriented();
 
 	Graph(bool isOriented);

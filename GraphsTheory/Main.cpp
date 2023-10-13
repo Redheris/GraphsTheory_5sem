@@ -10,9 +10,15 @@ using namespace std;
 
 void task1a1(Graph& g, int x) {
 	cout << "task 1a1: ";
+	// Проход по всем вершинам
 	for (auto i : g.getAdjList()) {
-		if (i.second.find(x) != i.second.end())
-			cout << i.first << " ";
+		// if (i.second.find(x) != i.second.end())
+		// 	cout << i.first << " ";
+
+		// Проход по всем рёбрам из вершины
+		for (auto y : i.second)
+			if (get<0>(y) == x)
+				cout << i.first << " ";
 	}
 	cout << endl;
 }
@@ -23,7 +29,7 @@ void task1a2(Graph& g) {
 	for (auto i : g.getAdjList()) {
 		nodesDeg[i.first] += i.second.size();
 		for (auto j : i.second) {
-			nodesDeg[j]++;
+			nodesDeg[get<0>(j)]++;
 		}
 	}
 	
