@@ -46,7 +46,7 @@ Graph::Graph(string fileLoc) {
 			continue;
 
 		int nodeNum = stoi(nodeInfo.substr(0, nodeInfo.find_first_of(':')).c_str());
-		//adjList.insert(make_pair(nodeNum, set<int>()));
+		adjList.insert(make_pair(nodeNum, set<tuple<int, int, string>>()));
 
 	
 		vector<string> nodeEdges = split(nodeInfo.substr(nodeInfo.find('[') + 1, nodeInfo.find(']') - nodeInfo.find('[') - 1), ' ');
@@ -64,6 +64,7 @@ Graph::Graph(string fileLoc) {
 
 
 			adjList.at(nodeNum).insert(make_tuple(edgeEndNode, weight, mark));
+			//adjList.insert(make_pair(nodeNum, set<tuple<int, int, string>>(make_tuple(edgeEndNode, weight, mark))))
 
 			// adjList.at(nodeNum).insert(edgeEndNode);
 			// edgeChars.insert(make_pair(make_pair(nodeNum, edgeEndNode), make_pair(edgeChar.first, edgeChar.second)));

@@ -10,12 +10,12 @@ using namespace std;
 
 void task1a1(Graph& g, int x) {
 	cout << "task 1a1: ";
-	// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј РІРµСЂС€РёРЅР°Рј
+	// Проход по всем вершинам
 	for (auto i : g.getAdjList()) {
 		// if (i.second.find(x) != i.second.end())
 		// 	cout << i.first << " ";
 
-		// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј СЂС‘Р±СЂР°Рј РёР· РІРµСЂС€РёРЅС‹
+		// Проход по всем рёбрам из вершины
 		for (auto y : i.second)
 			if (get<0>(y) == x)
 				cout << i.first << " ";
@@ -32,8 +32,8 @@ void task1a2(Graph& g) {
 			nodesDeg[get<0>(j)]++;
 		}
 	}
-	
-	for(int i = 0; i < nodesDeg.size(); ++i)
+
+	for (int i = 0; i < nodesDeg.size(); ++i)
 		cout << i << " : " << nodesDeg[i] << "\n";
 	cout << endl;
 }
@@ -43,28 +43,35 @@ Graph task1b(Graph& g) {
 	if (!g.getIsOriented())
 		return g;
 	Graph gNew(g);
-	auto tempEdges = g.getEdgeChars();
-	for (auto edge : g.getEdgeChars()) {
-		gNew.addEdge(edge.first.second, edge.first.first, edge.second.first, edge.second.second);
-	}
+	auto tempEdges = g.getAdjList();
+	//for (auto edge : g.getAdjList()) {
+	//	//gNew.addEdge(edge.first.second, edge.first.first, edge.second.first, edge.second.second);
+	//	gNew.addEdge(edge.first, edge.second, get<1>(edge), get<2>(edge));
+	//}
+
+	// Проход по всем вершинам
+	for (auto x : g.getAdjList())
+		// Проход по всем рёбрам
+		for (auto y : x.second)
+			gNew.addEdge(x.first, get<0>(y), get<1>(y), get<2>(y));
 
 	return gNew;
 }
 
-void task2_1_DFS(Graph& g, int v, bool*& used, vector<int> &res) {
+void task2_1_DFS(Graph& g, int v, bool*& used, vector<int>& res) {
 	used[v] = true;
 	auto vAdj = g.getAdjList().at(v);
 	for (auto i : vAdj)
-		if (!used[i])
-			task2_1_DFS(g, i, used, res);
+		if (!used[get<0>(i)])
+			task2_1_DFS(g, get<0>(i), used, res);
 	res.push_back(v);
 }
 
 Graph task2_1(Graph g) {
 	bool* used = new bool[g.getAdjList().size()] {0};
 	vector<int> res;
-	map<int, set<int>> oldAdj = g.getAdjList();
-	map<int, set<int>> resAdj;
+	map<int, set<tuple<int, int, string>>> oldAdj = g.getAdjList();
+	map<int, set<tuple<int, int, string>>> resAdj;
 
 	for (int i = 0; i < g.getAdjList().size(); ++i)
 		if (!used[i])
@@ -73,12 +80,21 @@ Graph task2_1(Graph g) {
 	reverse(res.begin(), res.end());
 
 
-	for (int i = 0; i < res.size(); ++i) {
-		set<int> tempAdj;
-		for (auto y : oldAdj[i])
-			tempAdj.insert(res[y]);
+	//for (int i = 0; i < res.size(); ++i) {
+	//	set<int> tempAdj;
+	//	for (auto y : oldAdj[i])
+	//		tempAdj.insert(res[y]);
+	//	resAdj[res[i]] = tempAdj;
+	//	/*resAdj.insert(make_pair(res[i], oldAdj[i]));*/
+	//}
+
+	// Обновление значений вершин в графе
+	for (int i : res) {
+		set<tuple<int, int, string>> tempAdj;
+
+		for (auto y : oldAdj.at(i))
+			tempAdj.insert(make_tuple(res[get<0>(y)], get<1>(y), get<2>(y)));
 		resAdj[res[i]] = tempAdj;
-		/*resAdj.insert(make_pair(res[i], oldAdj[i]));*/
 	}
 
 	g.setAdjList(resAdj);
@@ -120,39 +136,42 @@ int main() {
 
 	Graph task1 = Graph(true);
 	task1.addNode(7);
-	task1.addEdge(0,1);
-	task1.addEdge(0,0);
-	task1.addEdge(1,2);
-	task1.addEdge(2,3);
-	task1.addEdge(2,4);
-	task1.addEdge(3,4);
-	task1.addEdge(2,1);
-	task1.addEdge(4,2);
-	task1.addEdge(4,5);
-	task1.addEdge(5,4);
+	task1.addEdge(0, 1);
+	task1.addEdge(0, 0);
+	task1.addEdge(1, 2);
+	task1.addEdge(2, 3);
+	task1.addEdge(2, 4);
+	task1.addEdge(3, 4);
+	task1.addEdge(2, 1);
+	task1.addEdge(4, 2);
+	task1.addEdge(4, 5);
+	task1.addEdge(5, 4);
 
 	task1.printList();
 
-	task1a1(task1,1);
+	task1a1(task1, 1);
 	task1a2(task1);
-	
+
 	cout << "\nTask 1b:\n";
 	task1.printList();
 	cout << "\nResult 1b:\n";
 	task1b(task1).printList();
-	
 
-	/*Graph task21(true);
+
+	Graph task21(true);
 	task21.addNode(4);
-	task21.addEdge(0,3);
-	task21.addEdge(3,1);
-	task21.addEdge(3,2);
-	task21.addEdge(2,1);
+	task21.addEdge(0, 3);
+	task21.addEdge(3, 1);
+	task21.addEdge(3, 2);
+	task21.addEdge(2, 1);
 
+	cout << "\nИсходный граф:\n";
 	task21.printList();
 
 	Graph task21Result = task2_1(task21);
-	task21Result.printList();*/
+
+	cout << "\nИсходный граф:\n";
+	task21Result.printList();
 
 
 
