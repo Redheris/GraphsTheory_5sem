@@ -1,2 +1,0 @@
-new graph true
-addNode -n 5

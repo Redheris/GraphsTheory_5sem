@@ -1,4 +1,5 @@
 #include <vector>
+#include <queue>
 #include <iostream>
 #include <string>
 #include "ConsolePanel.h"
@@ -8,7 +9,7 @@
 
 using namespace std;
 
-void task1a1(Graph& g, int x) {
+void task1a1_connectedTo(Graph& g, int x) {
 	cout << "task 1a1: ";
 	// Проход по всем вершинам
 	for (auto i : g.getAdjList()) {
@@ -23,7 +24,7 @@ void task1a1(Graph& g, int x) {
 	cout << endl;
 }
 
-void task1a2(Graph& g) {
+void task1a2_degreeOfVerts(Graph& g) {
 	cout << "task 1b: ";
 	vector<int> nodesDeg(g.getAdjList().size());
 	for (auto i : g.getAdjList()) {
@@ -38,8 +39,8 @@ void task1a2(Graph& g) {
 	cout << endl;
 }
 
-Graph task1b(Graph& g) {
-	cout << "task 1a2:\n";
+Graph task1b_upToNotOrient(Graph& g) {
+	
 	if (!g.getIsOriented())
 		return g;
 	Graph gNew(g);
@@ -102,6 +103,39 @@ Graph task2_1(Graph g) {
 	return g;
 }
 
+void task2_2_BFS(Graph g, int v, vector<bool>& used) {
+	queue<int> q;
+	q.push(v);
+	used[v] = true;
+
+	while (!q.empty()) {
+		int u = q.front();
+		q.pop();
+		auto adjList = g.getAdjList().at(v);
+		for (auto y : adjList) {
+			if (!used[get<0>(y)]) {
+				q.push(get<0>(y));
+				used[get<0>(y)] = true;
+			}
+		}
+	}
+}
+
+
+int task2_2_countConnectedComponents(Graph g) {
+	vector<bool> used(g.getAdjList().size(), false);
+	int count = 0;
+
+	for (auto x : g.getAdjList()) {
+		if (!used[x.first]) {
+			task2_2_BFS(g, x.first, used);
+			count++;
+		}
+	}
+
+	return count;
+}
+
 int main() {
 	setlocale(LC_ALL, "RUS");
 
@@ -149,13 +183,14 @@ int main() {
 
 	task1.printList();
 
-	task1a1(task1, 1);
-	task1a2(task1);
+	task1a1_connectedTo(task1, 1);
+	task1a2_degreeOfVerts(task1);
 
 	cout << "\nTask 1b:\n";
 	task1.printList();
 	cout << "\nResult 1b:\n";
-	task1b(task1).printList();
+	cout << "task 1a2:\n";
+	task1b_upToNotOrient(task1).printList();
 
 
 	Graph task21(true);
@@ -165,6 +200,8 @@ int main() {
 	task21.addEdge(3, 2);
 	task21.addEdge(2, 1);
 
+	cout << "\nTask 5.2_1\n";
+
 	cout << "\nИсходный граф:\n";
 	task21.printList();
 
@@ -173,7 +210,30 @@ int main() {
 	cout << "\nИсходный граф:\n";
 	task21Result.printList();
 
+	cout << "\nTask 6.2_2\n";
 
+	Graph task22(false);
+	task22.addNode(6);
+	task22.addEdge(0,1);
+	task22.addEdge(0,2);
+	task22.addEdge(1,2);
+	task22.addEdge(3,4);
+
+	Graph task22_2(false);
+	task22_2.addNode(3);
+	task22_2.addEdge(0,1);
+	task22_2.addEdge(0,2);
+	task22_2.addEdge(1,2);
+
+	cout << "\nКоличество связных компонент task22: " << task2_2_countConnectedComponents(task22);
+
+	cout << "\nGraph task21:\n"; task21.printList();
+
+	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task21));
+
+	cout << "\nGraph task22_2:\n"; task22_2.printList();
+
+	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
 
 	//setupPanel();
 }
