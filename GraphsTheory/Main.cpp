@@ -235,5 +235,23 @@ int main() {
 
 	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
 
+	// Алгоритм Краскала работает только со связными неориентированными графами
+	Graph task3(false);
+	task3.addNode(7);
+	task3.addEdge(0, 1, 7);
+	task3.addEdge(0, 3, 5);
+	task3.addEdge(1, 2, 8);
+	task3.addEdge(1, 3, 9);
+	task3.addEdge(1, 4, 7);
+	task3.addEdge(3, 4, 15);
+	task3.addEdge(4, 6, 9);
+	task3.addEdge(4, 2, 5);
+	task3.addEdge(5, 3, 6);
+	task3.addEdge(5, 4, 8);
+	task3.addEdge(5, 6, 11);
+
+
+	
+
 	//setupPanel();
 }
