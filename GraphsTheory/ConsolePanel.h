@@ -19,7 +19,7 @@ Graph& getMemGraph(string title) {
 bool isCorrectGraphTitle(string title) {
 	cout << "|" << title << "|\n";
 	if (title == "") {
-		cout << "Íåäîïóñòèìîå èìÿ ãðàôà.\n";
+		cout << "ÐÐµÐ´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ Ð¸Ð¼Ñ Ð³Ñ€Ð°Ñ„Ð°.\n";
 		return false;
 	}
 	return true;
@@ -27,8 +27,8 @@ bool isCorrectGraphTitle(string title) {
 
 bool doOverride(string title) {
 	if (memGraphs.find(title) != memGraphs.end()) {
-		cout << "Ãðàô ñ èìåíåì " << title << " óæå ñóùåñòâóåò.\n"
-			<< "Âû õîòèòå ïåðåçàïèñàòü èìåþùèéñÿ ãðàô? Y/N\n";
+		cout << "Ð“Ñ€Ð°Ñ„ Ñ Ð¸Ð¼ÐµÐ½ÐµÐ¼ " << title << " ÑƒÐ¶Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚.\n"
+			<< "Ð’Ñ‹ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ Ð¿ÐµÑ€ÐµÐ·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ð¸Ð¼ÐµÑŽÑ‰Ð¸Ð¹ÑÑ Ð³Ñ€Ð°Ñ„? Y/N\n";
 		string ans;
 		cin >> ans;
 		string yes[]{ "y", "Y", "yes", "Yes" };
@@ -40,7 +40,7 @@ bool doOverride(string title) {
 
 bool isExists(string title) {
 	if (memGraphs.find(title) == memGraphs.end()) {
-		cout << "Ãðàô " << title << " íå ñóùåñòâóåò.\n";
+		cout << "Ð“Ñ€Ð°Ñ„ " << title << " Ð½Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚.\n";
 		return false;
 	}
 	return true;
@@ -48,7 +48,7 @@ bool isExists(string title) {
 
 bool checkCurrentIsNull() {
 	if (currentGraph == "") {
-		cout << "Äëÿ ðåäàêòèðîâàíèÿ íå âûáðàí íèêàêîé ãðàô. Âûáåðèòå åãî êîìàíäîé edit.\n";
+		cout << "Ð”Ð»Ñ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð½Ðµ Ð²Ñ‹Ð±Ñ€Ð°Ð½ Ð½Ð¸ÐºÐ°ÐºÐ¾Ð¹ Ð³Ñ€Ð°Ñ„. Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÐµÐ³Ð¾ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð¾Ð¹ edit.\n";
 		return true;
 	}
 	return false;
@@ -63,39 +63,39 @@ void start() {
 		cin >> cmd;
 
 		if (cmd == "help") {
-			cout << "Ïðèìå÷àíèå: ÷òîáû îòêàçàòüñÿ ïèñàòü ôëàã â êîìàíäå, èñïîëüçóéòå -e.\n"
-				<< "Äîñòóïíûå êîìàíäû:\n"
+			cout << "ÐŸÑ€Ð¸Ð¼ÐµÑ‡Ð°Ð½Ð¸Ðµ: Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð¾Ñ‚ÐºÐ°Ð·Ð°Ñ‚ÑŒÑÑ Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ñ„Ð»Ð°Ð³ Ð² ÐºÐ¾Ð¼Ð°Ð½Ð´Ðµ, Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐ¹Ñ‚Ðµ -e.\n"
+				<< "Ð”Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ðµ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ‹:\n"
 				<< "- new <title> <1|true/0|false> :\n"
-				<< "\tñîçäà¸ò íîâûé ãðàô ñ èìåíåì title, âòîðîé àðãóìåíò îïðåäåëÿåò\n"
-				<< "\tîðèåíòèðîâàííîñòü ãðàôà;\n"
+				<< "\tÑÐ¾Ð·Ð´Ð°Ñ‘Ñ‚ Ð½Ð¾Ð²Ñ‹Ð¹ Ð³Ñ€Ð°Ñ„ Ñ Ð¸Ð¼ÐµÐ½ÐµÐ¼ title, Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹ Ð°Ñ€Ð³ÑƒÐ¼ÐµÐ½Ñ‚ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚\n"
+				<< "\tÐ¾Ñ€Ð¸ÐµÐ½Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾ÑÑ‚ÑŒ Ð³Ñ€Ð°Ñ„Ð°;\n"
 				<< "- edit <title> :\n"
-				<<  "\tâûáèðàåò ãðàô title äëÿ ðåäàêòèðîâàíèÿ äðóãèìè êîìàíäàìè\n"
+				<<  "\tÐ²Ñ‹Ð±Ð¸Ñ€Ð°ÐµÑ‚ Ð³Ñ€Ð°Ñ„ title Ð´Ð»Ñ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð´Ñ€ÑƒÐ³Ð¸Ð¼Ð¸ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð°Ð¼Ð¸\n"
 				<< "- list :\n"
-				<< "\tâûâîäèò ñïèñîê çàïèñàííûõ â ïàìÿòè ãðàôîâ;\n"
+				<< "\tÐ²Ñ‹Ð²Ð¾Ð´Ð¸Ñ‚ ÑÐ¿Ð¸ÑÐ¾Ðº Ð·Ð°Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ñ… Ð² Ð¿Ð°Ð¼ÑÑ‚Ð¸ Ð³Ñ€Ð°Ñ„Ð¾Ð²;\n"
 				<< "- delete/del <title> :\n"
-				<< "\tóäàëÿåò ãðàô title èç ïàìÿòè;\n"
+				<< "\tÑƒÐ´Ð°Ð»ÑÐµÑ‚ Ð³Ñ€Ð°Ñ„ title Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸;\n"
 				<< "- addNode [-n n] :\n"
-				<< "\täîáàâëÿåò â ãðàô íîâóþ èçîëèðîâàííóþ âåðøèíó,\n"
-				<< "\tn - êîëè÷åñòâî äîáàâëÿåìûõ âåðøèí, ïî óìîë÷àíèþ 1;\n"
+				<< "\tÐ´Ð¾Ð±Ð°Ð²Ð»ÑÐµÑ‚ Ð² Ð³Ñ€Ð°Ñ„ Ð½Ð¾Ð²ÑƒÑŽ Ð¸Ð·Ð¾Ð»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½ÑƒÑŽ Ð²ÐµÑ€ÑˆÐ¸Ð½Ñƒ,\n"
+				<< "\tn - ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼Ñ‹Ñ… Ð²ÐµÑ€ÑˆÐ¸Ð½, Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ 1;\n"
 				<< "- addEdge <x> <y>  [-w weight | -m mark | -wm weight mark] :\n"
-				<< "\täîáàâëÿåò â ãðàô ðåáðî èç òî÷êè x â òî÷êó y,\n"
-				<< "\tweight è mark - âåñ è ìåòêà ðåáðà ñîîòâåòñòâåííî;\n"
+				<< "\tÐ´Ð¾Ð±Ð°Ð²Ð»ÑÐµÑ‚ Ð² Ð³Ñ€Ð°Ñ„ Ñ€ÐµÐ±Ñ€Ð¾ Ð¸Ð· Ñ‚Ð¾Ñ‡ÐºÐ¸ x Ð² Ñ‚Ð¾Ñ‡ÐºÑƒ y,\n"
+				<< "\tweight Ð¸ mark - Ð²ÐµÑ Ð¸ Ð¼ÐµÑ‚ÐºÐ° Ñ€ÐµÐ±Ñ€Ð° ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ð¾;\n"
 				<< "- delNode <x> :\n"
-				<< "\tóäàëÿåò èç ãðàôà óçåë x;\n"
+				<< "\tÑƒÐ´Ð°Ð»ÑÐµÑ‚ Ð¸Ð· Ð³Ñ€Ð°Ñ„Ð° ÑƒÐ·ÐµÐ» x;\n"
 				<< "- delEdge [x y | -m mark] :\n"
-				<< "\tóäàëÿåò èç ãðàôà ðåáðî (x,y) èëè æå âñå ð¸áðà ñ\n"
-				<< "\tìåòêîé mark;\n"
+				<< "\tÑƒÐ´Ð°Ð»ÑÐµÑ‚ Ð¸Ð· Ð³Ñ€Ð°Ñ„Ð° Ñ€ÐµÐ±Ñ€Ð¾ (x,y) Ð¸Ð»Ð¸ Ð¶Ðµ Ð²ÑÐµ Ñ€Ñ‘Ð±Ñ€Ð° Ñ\n"
+				<< "\tÐ¼ÐµÑ‚ÐºÐ¾Ð¹ mark;\n"
 				<< "- print <title | -e> :\n"
-				<< "\tâûâîäèò èíôîðìàöèþ î ãðàôå title èëè î òåêóùåì\n"
-				<< "\t(îðèåíòèðîâàííîñòü è ñïèñîê ñìåæíîñòè)\n"
+				<< "\tÐ²Ñ‹Ð²Ð¾Ð´Ð¸Ñ‚ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸ÑŽ Ð¾ Ð³Ñ€Ð°Ñ„Ðµ title Ð¸Ð»Ð¸ Ð¾ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¼\n"
+				<< "\t(Ð¾Ñ€Ð¸ÐµÐ½Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾ÑÑ‚ÑŒ Ð¸ ÑÐ¿Ð¸ÑÐ¾Ðº ÑÐ¼ÐµÐ¶Ð½Ð¾ÑÑ‚Ð¸)\n"
 				<< "- import <title> <path> :\n"
-				<< "\tèìïîðòèðóåò ãðàô title èç ôàéëà path è çàïèñàòü â ïàìÿòè;\n"
+				<< "\tÐ¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ð¸Ñ€ÑƒÐµÑ‚ Ð³Ñ€Ð°Ñ„ title Ð¸Ð· Ñ„Ð°Ð¹Ð»Ð° path Ð¸ Ð·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ð² Ð¿Ð°Ð¼ÑÑ‚Ð¸;\n"
 				<< "- export <title> <path> :\n"
-				<< "\týêñïîðòèðóåò ãðàô title â ôàéë path;\n"
+				<< "\tÑÐºÑÐ¿Ð¾Ñ€Ñ‚Ð¸Ñ€ÑƒÐµÑ‚ Ð³Ñ€Ð°Ñ„ title Ð² Ñ„Ð°Ð¹Ð» path;\n"
 				<< "- copy <title> <original> :\n"
-				<< "\tñîçäà¸ò íîâûé ãðàô title íà îñíîâå ãðàôà original;\n"
+				<< "\tÑÐ¾Ð·Ð´Ð°Ñ‘Ñ‚ Ð½Ð¾Ð²Ñ‹Ð¹ Ð³Ñ€Ð°Ñ„ title Ð½Ð° Ð¾ÑÐ½Ð¾Ð²Ðµ Ð³Ñ€Ð°Ñ„Ð° original;\n"
 				<< "- exit/end :\n"
-				<< "\tâûõîäèò èç ðåæèìà êîíñîëüíîãî èíòåðôåéñà.\n";
+				<< "\tÐ²Ñ‹Ñ…Ð¾Ð´Ð¸Ñ‚ Ð¸Ð· Ñ€ÐµÐ¶Ð¸Ð¼Ð° ÐºÐ¾Ð½ÑÐ¾Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹ÑÐ°.\n";
 		}
 		else if (cmd == "edit") {
 			cin >> currentGraph;
@@ -116,11 +116,11 @@ void start() {
 			
 			memGraphs.insert(make_pair(title, Graph(isOriented)));
 			currentGraph = title;
-			cout << "Ãðàô " << title << " óñïåøíî ñîçäàí è âûáðàí äëÿ ðåäàêòèðîâàíèÿ.\n";
+			cout << "Ð“Ñ€Ð°Ñ„ " << title << " ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÑÐ¾Ð·Ð´Ð°Ð½ Ð¸ Ð²Ñ‹Ð±Ñ€Ð°Ð½ Ð´Ð»Ñ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ.\n";
 
 		}
 		else if (cmd == "list") {
-			cout << "\nÈìåþùèåñÿ ãðàôû:\n";
+			cout << "\nÐ˜Ð¼ÐµÑŽÑ‰Ð¸ÐµÑÑ Ð³Ñ€Ð°Ñ„Ñ‹:\n";
 			for (auto i : memGraphs) {
 				cout << i.first;
 				if (i.first != (*memGraphs.rbegin()).first) {
@@ -137,7 +137,7 @@ void start() {
 
 			memGraphs.erase(currentGraph);
 			currentGraph = "";
-			cout << "Ãðàô " << currentGraph << " óñïåøíî óäàë¸í.\n";
+			cout << "Ð“Ñ€Ð°Ñ„ " << currentGraph << " ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÑƒÐ´Ð°Ð»Ñ‘Ð½.\n";
 		}
 		else if (cmd == "addNode") {
 			string flag;
@@ -149,7 +149,7 @@ void start() {
 			if (flag == "-n")
 				cin >> n;
 			getMemGraph(currentGraph).addNode(n);
-			cout << "Â ãðàô " << currentGraph << " äîáàâëåíî " << n << " âåðøèí.\n";
+			cout << "Ð’ Ð³Ñ€Ð°Ñ„ " << currentGraph << " Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾ " << n << " Ð²ÐµÑ€ÑˆÐ¸Ð½.\n";
 		}
 		else if (cmd == "addEdge") {
 			string flag, mark = "";
@@ -171,13 +171,13 @@ void start() {
 			getMemGraph(currentGraph).addEdge(x, y, weight, mark);
 			string edgeChar = "";
 			if (weight != 0 || mark != "") {
-				edgeChar = " ñ õàðàêòåðèñòèêàìè (" + to_string(weight);
+				edgeChar = " Ñ Ñ…Ð°Ñ€Ð°ÐºÑ‚ÐµÑ€Ð¸ÑÑ‚Ð¸ÐºÐ°Ð¼Ð¸ (" + to_string(weight);
 				if (mark != "")
 					edgeChar += ", " + mark + ")";
 				else
 					edgeChar += ")";
 			}
-			cout << "Â ãðàô " << currentGraph << " äîáàâëåíî ðåáðî (" << x << "," << y << ")" << edgeChar << ".\n";
+			cout << "Ð’ Ð³Ñ€Ð°Ñ„ " << currentGraph << " Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾ Ñ€ÐµÐ±Ñ€Ð¾ (" << x << "," << y << ")" << edgeChar << ".\n";
 		}
 		else if (cmd == "delNode") {
 			int x;
@@ -186,7 +186,7 @@ void start() {
 			if (checkCurrentIsNull()) continue;
 
 			getMemGraph(currentGraph).delNode(x);
-			cout << "Èç ãðàôà " << currentGraph << " óäàëåíà âåðøèíà " << x << ".\n";
+			cout << "Ð˜Ð· Ð³Ñ€Ð°Ñ„Ð° " << currentGraph << " ÑƒÐ´Ð°Ð»ÐµÐ½Ð° Ð²ÐµÑ€ÑˆÐ¸Ð½Ð° " << x << ".\n";
 		}
 		else if (cmd == "delEdge") {
 			string flag;
@@ -199,14 +199,14 @@ void start() {
 				string mark;
 				cin >> mark;
 				g.delEdges(mark);
-				cout << "Èç ãðàôà " << currentGraph << "óäàëåíû âñå ð¸áðà ñ ìåòêîé " << mark << ".\n";
+				cout << "Ð˜Ð· Ð³Ñ€Ð°Ñ„Ð° " << currentGraph << "ÑƒÐ´Ð°Ð»ÐµÐ½Ñ‹ Ð²ÑÐµ Ñ€Ñ‘Ð±Ñ€Ð° Ñ Ð¼ÐµÑ‚ÐºÐ¾Ð¹ " << mark << ".\n";
 			}
 			else {
 				int x, y;
 				x = stoi(flag);
 				cin >> y;
 				g.delEdge(x, y);
-				cout << "Èç ãðàôà " << currentGraph << " óäàëåíî ðåáðî (" << x << "," << y << ").\n";
+				cout << "Ð˜Ð· Ð³Ñ€Ð°Ñ„Ð° " << currentGraph << " ÑƒÐ´Ð°Ð»ÐµÐ½Ð¾ Ñ€ÐµÐ±Ñ€Ð¾ (" << x << "," << y << ").\n";
 			}
 		}
 		else if (cmd == "print") {
@@ -220,7 +220,7 @@ void start() {
 			else
 				if (!isExists(title)) continue;
 
-			cout << "\nÈíôîðìàöèÿ î ãðàôå " << title << ":\n";
+			cout << "\nÐ˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ Ð¾ Ð³Ñ€Ð°Ñ„Ðµ " << title << ":\n";
 			getMemGraph(title).printList();
 		}
 		else if (cmd == "import") {
@@ -231,13 +231,13 @@ void start() {
 
 			ifstream in(path);
 			if (!in.good()) {
-				cout << "Ôàéë íå íàéäåí. Ïðîâåðüòå ïðàâèëüíîñòü ïóòè.\n";
+				cout << "Ð¤Ð°Ð¹Ð» Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½. ÐŸÑ€Ð¾Ð²ÐµÑ€ÑŒÑ‚Ðµ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾ÑÑ‚ÑŒ Ð¿ÑƒÑ‚Ð¸.\n";
 				continue;
 			}
 			memGraphs.insert(make_pair(title, NULL));
 			getMemGraph(title) = Graph(path);
 			in.close();
-			cout << "Ãðàô " << title << " óñïåøíî èìïîðòèðîâàí èç ôàéëà " << path << ".\n";
+			cout << "Ð“Ñ€Ð°Ñ„ " << title << " ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½ Ð¸Ð· Ñ„Ð°Ð¹Ð»Ð° " << path << ".\n";
 		}
 		else if (cmd == "export") {
 			string title, path;
@@ -246,7 +246,7 @@ void start() {
 			if (!isExists(title)) continue;
 
 			getMemGraph(title).exportList(path);
-			cout << "Ãðàô " << title << " óñïåøíî ýêñïðîòèðîâàí â ôàéë " << path << ".\n";
+			cout << "Ð“Ñ€Ð°Ñ„ " << title << " ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÑÐºÑÐ¿Ñ€Ð¾Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½ Ð² Ñ„Ð°Ð¹Ð» " << path << ".\n";
 		}
 		else if (cmd == "copy") {
 			string title, original;
@@ -258,20 +258,20 @@ void start() {
 
 			memGraphs.insert(make_pair(title, NULL));
 			getMemGraph(title) = getMemGraph(original);
-			cout << "Ãðàô " << currentGraph << " óñïåøíî ñîçäàí íà îñíîâå ãðàôà " << original << ".\n";
+			cout << "Ð“Ñ€Ð°Ñ„ " << currentGraph << " ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ ÑÐ¾Ð·Ð´Ð°Ð½ Ð½Ð° Ð¾ÑÐ½Ð¾Ð²Ðµ Ð³Ñ€Ð°Ñ„Ð° " << original << ".\n";
 		}
 		else if (cmd == "exit" || cmd == "end") {
-			cout << "Êîíñîëüíûé èíòåðôåéñ çàêðûò.\n";
+			cout << "ÐšÐ¾Ð½ÑÐ¾Ð»ÑŒÐ½Ñ‹Ð¹ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹Ñ Ð·Ð°ÐºÑ€Ñ‹Ñ‚.\n";
 		}
 		else
-			cout << "Íåèçâåñòíàÿ êîìàíäà. Íàïèøèòå help äëÿ ïîëíîãî ñïèñêà èìåþùèõñÿ êîìàíä.\n";
+			cout << "ÐÐµÐ¸Ð·Ð²ÐµÑÑ‚Ð½Ð°Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð°. ÐÐ°Ð¿Ð¸ÑˆÐ¸Ñ‚Ðµ help Ð´Ð»Ñ Ð¿Ð¾Ð»Ð½Ð¾Ð³Ð¾ ÑÐ¿Ð¸ÑÐºÐ° Ð¸Ð¼ÐµÑŽÑ‰Ð¸Ñ…ÑÑ ÐºÐ¾Ð¼Ð°Ð½Ð´.\n";
 	}
 }
 
 void setupPanel() {
 	cout
-		<< "\nÇàïóùåí êîíñîëüíûé èíòåðôåéñ äëÿ ðàáîòû ñ ãðàôàìè.\n"
-		<< "Äëÿ ñïèñêà äîñòóïíûõ êîìàíä íàïèøèòå help, äëÿ âûõîäà - exit.\n";
+		<< "\nÐ—Ð°Ð¿ÑƒÑ‰ÐµÐ½ ÐºÐ¾Ð½ÑÐ¾Ð»ÑŒÐ½Ñ‹Ð¹ Ð¸Ð½Ñ‚ÐµÑ€Ñ„ÐµÐ¹Ñ Ð´Ð»Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ Ð³Ñ€Ð°Ñ„Ð°Ð¼Ð¸.\n"
+		<< "Ð”Ð»Ñ ÑÐ¿Ð¸ÑÐºÐ° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ñ… ÐºÐ¾Ð¼Ð°Ð½Ð´ Ð½Ð°Ð¿Ð¸ÑˆÐ¸Ñ‚Ðµ help, Ð´Ð»Ñ Ð²Ñ‹Ñ…Ð¾Ð´Ð° - exit.\n";
 	start();
 }
 

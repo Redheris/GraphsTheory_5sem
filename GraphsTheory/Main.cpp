@@ -11,12 +11,12 @@ using namespace std;
 
 void task1a1_connectedTo(Graph& g, int x) {
 	cout << "task 1a1: ";
-	// Проход по всем вершинам
+	// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј РІРµСЂС€РёРЅР°Рј
 	for (auto i : g.getAdjList()) {
 		// if (i.second.find(x) != i.second.end())
 		// 	cout << i.first << " ";
 
-		// Проход по всем рёбрам из вершины
+		// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј СЂС‘Р±СЂР°Рј РёР· РІРµСЂС€РёРЅС‹
 		for (auto y : i.second)
 			if (get<0>(y) == x)
 				cout << i.first << " ";
@@ -50,9 +50,9 @@ Graph task1b_upToNotOrient(Graph& g) {
 	//	gNew.addEdge(edge.first, edge.second, get<1>(edge), get<2>(edge));
 	//}
 
-	// Проход по всем вершинам
+	// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј РІРµСЂС€РёРЅР°Рј
 	for (auto x : g.getAdjList())
-		// Проход по всем рёбрам
+		// РџСЂРѕС…РѕРґ РїРѕ РІСЃРµРј СЂС‘Р±СЂР°Рј
 		for (auto y : x.second)
 			gNew.addEdge(x.first, get<0>(y), get<1>(y), get<2>(y));
 
@@ -89,7 +89,7 @@ Graph task2_1(Graph g) {
 	//	/*resAdj.insert(make_pair(res[i], oldAdj[i]));*/
 	//}
 
-	// Обновление значений вершин в графе
+	// РћР±РЅРѕРІР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ РІРµСЂС€РёРЅ РІ РіСЂР°С„Рµ
 	for (int i : res) {
 		set<tuple<int, int, string>> tempAdj;
 
@@ -202,12 +202,12 @@ int main() {
 
 	cout << "\nTask 5.2_1\n";
 
-	cout << "\nИсходный граф:\n";
+	cout << "\nРСЃС…РѕРґРЅС‹Р№ РіСЂР°С„:\n";
 	task21.printList();
 
 	Graph task21Result = task2_1(task21);
 
-	cout << "\nИсходный граф:\n";
+	cout << "\nРСЃС…РѕРґРЅС‹Р№ РіСЂР°С„:\n";
 	task21Result.printList();
 
 	cout << "\nTask 6.2_2\n";
@@ -225,17 +225,17 @@ int main() {
 	task22_2.addEdge(0,2);
 	task22_2.addEdge(1,2);
 
-	cout << "\nКоличество связных компонент task22: " << task2_2_countConnectedComponents(task22);
+	cout << "\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃРІСЏР·РЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚ task22: " << task2_2_countConnectedComponents(task22);
 
 	cout << "\nGraph task21:\n"; task21.printList();
 
-	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task21));
+	cout << "\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃРІСЏР·РЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚ task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task21));
 
 	cout << "\nGraph task22_2:\n"; task22_2.printList();
 
-	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
+	cout << "\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃРІСЏР·РЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚ task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
 
-	// Алгоритм Краскала работает только со связными неориентированными графами
+	// РђР»РіРѕСЂРёС‚Рј РљСЂР°СЃРєР°Р»Р° СЂР°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ СЃРѕ СЃРІСЏР·РЅС‹РјРё РЅРµРѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅРЅС‹РјРё РіСЂР°С„Р°РјРё
 	Graph task3(false);
 	task3.addNode(7);
 	task3.addEdge(0, 1, 7);
