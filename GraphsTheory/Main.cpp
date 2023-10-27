@@ -136,6 +136,57 @@ int task2_2_countConnectedComponents(Graph g) {
 	return count;
 }
 
+// Функция сравнния длины двух рёбер вида (x, y, weight)
+bool isShorter(tuple<int, int, int, string> e1, tuple<int, int, int, string> e2) {
+	return get<2>(e1) < get<2>(e2);
+}
+
+Graph minOstovTree_Kruskal(Graph g) {
+	auto oldAdjList = g.getAdjList();
+	// Результирующий граф
+	Graph newG(false);
+	newG.addNode(oldAdjList.size());
+	int edgeCount = 0;
+	// Список компонент связности со списком вершин в ней
+	map<int, set<int>> linkComps;
+	// Список вершин с номером компоненты
+	map<int, int> nodeComps;
+	// Список рёбер: x, y, weight
+	vector<tuple<int, int, int, string>> sortEdges;
+	int compNum = 0;
+	for (auto x : oldAdjList) {
+		nodeComps[x.first] = compNum;
+		linkComps[compNum++].insert(x.first);
+		//nodeComps.insert(make_pair(x.first, compNum));
+		//linkComps.insert(compNum++, x.first);
+		for (auto y : x.second)
+			sortEdges.push_back(make_tuple(x.first, get<0>(y), get<1>(y), get<2>(y)));
+	}
+	// Сортировка рёбер в списке по неубыванию
+	sort(sortEdges.begin(), sortEdges.end(), isShorter);
+
+	for (auto edge : sortEdges) {
+		if (edgeCount >= oldAdjList.size()) break;
+		int x = get<0>(edge);
+		if (nodeComps[x] != nodeComps[get<1>(edge)]) {
+			// Максимльный и минимальный номера компоненты
+			int maxComp = max(nodeComps[x], nodeComps[get<1>(edge)]);
+			int minComp = min(nodeComps[x], nodeComps[get<1>(edge)]);
+			// Добавление ребра в результат
+			newG.addEdge(x, get<1>(edge), get<2>(edge), get<3>(edge));
+			edgeCount++;
+			// Объединение компонент
+			for (int ns : linkComps[maxComp]) {
+				nodeComps[ns] = minComp;
+				linkComps[minComp].insert(ns);
+			}
+			// Отбрасывание компоненты после объединения
+			linkComps.erase(maxComp);
+		}
+	}
+	return newG;
+}
+
 int main() {
 	setlocale(LC_ALL, "RUS");
 
@@ -250,7 +301,7 @@ int main() {
 	task3.addEdge(5, 4, 8);
 	task3.addEdge(5, 6, 11);
 
-
+	minOstovTree_Kruskal(task3).printList();
 	
 
 	//setupPanel();
