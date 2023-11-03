@@ -1,6 +1,7 @@
 #include <vector>
 #include <queue>
 #include <iostream>
+#include <windows.h>
 #include <string>
 #include "ConsolePanel.h"
 
@@ -187,8 +188,33 @@ Graph minOstovTree_Kruskal(Graph g) {
 	return newG;
 }
 
+map<int, int> shortestPath_Dijkstra(Graph g, int s) {
+	map<int, int> pathsLen;
+	vector<bool> used;
+	for (auto v : g.getAdjList()) {
+		pathsLen[get<0>(v)] = INFINITY;
+		used.push_back(false);
+	}
+	pathsLen[s] = 0;
+	for (auto i : g.getAdjList()) {
+		int v = -1;
+		for (auto j : g.getAdjList())
+			if (!used[get<0>(j)] && (v == -1 || pathsLen[get<0>(j)] < pathsLen[v]))
+				v = get<0>(j);
+		if (pathsLen[v] == INFINITY)
+			return pathsLen;
+		used[v] = true;
+		for (auto e : g.getAdjList()[v])
+			if (pathsLen[v] + get<1>(e) < pathsLen[get<0>(e)])
+				pathsLen[get<0>(e)] = pathsLen[v] + get<1>(e);
+	}
+
+	return pathsLen;
+}
+
 int main() {
-	setlocale(LC_ALL, "RUS");
+	SetConsoleOutputCP(CP_UTF8);
+	//setlocale(LC_ALL, "RUS");
 
 	string path = "./test1.txt";
 
@@ -303,6 +329,23 @@ int main() {
 
 	minOstovTree_Kruskal(task3).printList();
 	
+	Graph task4(true);
+	task4.addNode(7);
+	task4.addEdge(0, 1, 7);
+	task4.addEdge(0, 2, 14);
+	task4.addEdge(0, 5, 7);
+	task4.addEdge(1, 3, 4);
+	task4.addEdge(1, 6, 10);
+	task4.addEdge(2, 3, 4);
+	task4.addEdge(3, 2, 4);
+	task4.addEdge(3, 4, 4);
+	task4.addEdge(3, 6, 15);
+	task4.addEdge(5, 2, 2);
+	task4.addEdge(5, 4, 9);
+
+	task4.printList();
+
+	//shortestPath_Dijkstra(task4, 0);
 
 	//setupPanel();
 }
