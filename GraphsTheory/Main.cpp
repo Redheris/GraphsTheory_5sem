@@ -191,20 +191,21 @@ Graph minOstovTree_Kruskal(Graph g) {
 map<int, int> shortestPath_Dijkstra(Graph g, int s) {
 	map<int, int> pathsLen;
 	vector<bool> used;
-	for (auto v : g.getAdjList()) {
-		pathsLen[get<0>(v)] = INFINITY;
+	auto adjList = g.getAdjList();
+	for (auto v : adjList) {
+		pathsLen[get<0>(v)] = MAXINT;
 		used.push_back(false);
 	}
 	pathsLen[s] = 0;
-	for (auto i : g.getAdjList()) {
+	for (auto i : adjList) {
 		int v = -1;
-		for (auto j : g.getAdjList())
-			if (!used[get<0>(j)] && (v == -1 || pathsLen[get<0>(j)] < pathsLen[v]))
-				v = get<0>(j);
-		if (pathsLen[v] == INFINITY)
+		for (auto j : adjList)
+			if (!used[j.first] && (v == -1 || pathsLen[j.first] < pathsLen[v]))
+				v = j.first;
+		if (pathsLen[v] == MAXINT)
 			return pathsLen;
 		used[v] = true;
-		for (auto e : g.getAdjList()[v])
+		for (auto e : adjList.at(v))
 			if (pathsLen[v] + get<1>(e) < pathsLen[get<0>(e)])
 				pathsLen[get<0>(e)] = pathsLen[v] + get<1>(e);
 	}
@@ -345,7 +346,13 @@ int main() {
 
 	task4.printList();
 
-	//shortestPath_Dijkstra(task4, 0);
+
+	map<int,int> shortPaths = shortestPath_Dijkstra(task4, 0);
+
+	int s = 0;
+	for (pair<int, int> x : shortPaths)
+		cout << s << " -> " << x.first << " := " << x.second << endl;
+
 
 	//setupPanel();
 }
