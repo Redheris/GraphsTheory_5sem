@@ -213,6 +213,36 @@ map<int, int> shortestPath_Dijkstra(Graph g, int s) {
 	return pathsLen;
 }
 
+set<int> task4a_findGraphCenter(Graph g) {
+	std::map<int, int> radiusMap; // Карта для хранения эксцентриситетов вершин
+	int graphRadius = MAXINT; // Инициализация радиуса графа
+
+	for (auto x : g.getAdjList()) {
+		int sourceVertex = x.first;
+		std::map<int, int> shortestPaths = shortestPath_Dijkstra(g, sourceVertex);
+
+		// Находим эксцентриситет для каждой вершины
+		int maxPath = 0;
+		for (auto edge : shortestPaths)
+			maxPath = max(maxPath, edge.second);
+
+		// Сохраняем эксцентриситет в карту
+		radiusMap[sourceVertex] = maxPath;
+
+		// Обновляем общий радиус графа
+		graphRadius = min(graphRadius, maxPath);
+	}
+	cout << "Радиус графа: " << graphRadius << endl;
+
+	// Находим вершины с эксцентриситетом, равным радиусу графа
+	std::set<int> centerVertices;
+	for (auto x : radiusMap)
+		if (x.second == graphRadius)
+			centerVertices.insert(x.first);
+
+	return centerVertices;
+}
+
 int main() {
 	SetConsoleOutputCP(CP_UTF8);
 	//setlocale(LC_ALL, "RUS");
@@ -346,12 +376,27 @@ int main() {
 
 	task4.printList();
 
+	// Пример использования
+	Graph task4a(false);
+
+	// Создаем звезду с центром в вершине 1
+	task4a.addNode(4);
+	task4a.addEdge(0, 1, 3);
+	task4a.addEdge(0, 3, 15);
+	task4a.addEdge(1, 3, 4);
+	task4a.addEdge(2, 3, 7);
 
 	map<int,int> shortPaths = shortestPath_Dijkstra(task4, 0);
-
-	int s = 0;
 	for (pair<int, int> x : shortPaths)
-		cout << s << " -> " << x.first << " := " << x.second << endl;
+		cout << 0 << " -> " << x.first << " := " << x.second << endl;
+	cout << "----------------\n";
+	shortPaths = shortestPath_Dijkstra(task4a, 0);
+	for (pair<int, int> x : shortPaths)
+		cout << 0 << " -> " << x.first << " := " << x.second << endl;
+	for (auto x : task4a_findGraphCenter(task4a))
+		cout << x << " ";
+	cout << endl;
+	cout << "----------------\n";
 
 
 	//setupPanel();
