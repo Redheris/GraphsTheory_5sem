@@ -214,12 +214,12 @@ map<int, int> shortestPath_Dijkstra(Graph g, int s) {
 }
 
 set<int> task4a_findGraphCenter(Graph g) {
-	std::map<int, int> radiusMap; // Карта для хранения эксцентриситетов вершин
+	map<int, int> radiusMap; // Карта для хранения эксцентриситетов вершин
 	int graphRadius = MAXINT; // Инициализация радиуса графа
 
 	for (auto x : g.getAdjList()) {
 		int sourceVertex = x.first;
-		std::map<int, int> shortestPaths = shortestPath_Dijkstra(g, sourceVertex);
+		map<int, int> shortestPaths = shortestPath_Dijkstra(g, sourceVertex);
 
 		// Находим эксцентриситет для каждой вершины
 		int maxPath = 0;
@@ -235,12 +235,69 @@ set<int> task4a_findGraphCenter(Graph g) {
 	cout << "Радиус графа: " << graphRadius << endl;
 
 	// Находим вершины с эксцентриситетом, равным радиусу графа
-	std::set<int> centerVertices;
+	set<int> centerVertices;
 	for (auto x : radiusMap)
 		if (x.second == graphRadius)
 			centerVertices.insert(x.first);
 
 	return centerVertices;
+}
+
+map<int, int> shortestPath_bellmanFord(Graph g, int source)
+{
+	map<int, int> distance; // Карта для хранения длин кратчайших путей
+	vector<int> vertices;   // Вектор для хранения вершин графа
+
+	// Инициализация расстояний: из начальной вершины до всех остальных расстояние равно бесконечности
+	for (auto const& entry : g.getAdjList())
+	{
+		int vertex = entry.first;
+		distance[vertex] = MAXINT;
+		vertices.push_back(vertex);
+	}
+
+	// Расстояние до начальной вершины устанавливаем равным 0
+	distance[source] = 0;
+
+	// Релаксация рёбер (|V| - 1) раз, где |V| - количество вершин в графе
+	for (int i = 1; i < vertices.size(); ++i)
+	{
+		for (auto const& entry : g.getAdjList())
+		{
+			int u = entry.first;
+
+			for (auto const& edge : entry.second)
+			{
+				int v = get<0>(edge);
+				int weight = get<1>(edge);
+
+				if (distance[u] != MAXINT && distance[u] + weight < distance[v])
+				{
+					distance[v] = distance[u] + weight;
+				}
+			}
+		}
+	}
+
+	// Проверка наличия отрицательных циклов
+	for (auto const& entry : g.getAdjList())
+	{
+		int u = entry.first;
+
+		for (auto const& edge : entry.second)
+		{
+			int v = get<0>(edge);
+			int weight = get<1>(edge);
+
+			if (distance[u] != MAXINT && distance[u] + weight < distance[v])
+			{
+				cerr << "Граф содержит отрицательный цикл" << endl;
+				return map<int, int>();
+			}
+		}
+	}
+
+	return distance;
 }
 
 int main() {
@@ -360,6 +417,8 @@ int main() {
 
 	minOstovTree_Kruskal(task3).printList();
 	
+	cout << "\nGraph task4:\n";
+
 	Graph task4(true);
 	task4.addNode(7);
 	task4.addEdge(0, 1, 7);
@@ -386,17 +445,27 @@ int main() {
 	task4a.addEdge(1, 3, 4);
 	task4a.addEdge(2, 3, 7);
 
+	cout << "\nЗадание 8 (IVa)\n\n";
+
 	map<int,int> shortPaths = shortestPath_Dijkstra(task4, 0);
+	cout << "Кратчайшие пути из 0:\n";
 	for (pair<int, int> x : shortPaths)
 		cout << 0 << " -> " << x.first << " := " << x.second << endl;
 	cout << "----------------\n";
+	cout << "Кратчайшие пути из 0:\n";
 	shortPaths = shortestPath_Dijkstra(task4a, 0);
 	for (pair<int, int> x : shortPaths)
 		cout << 0 << " -> " << x.first << " := " << x.second << endl;
-	for (auto x : task4a_findGraphCenter(task4a))
-		cout << x << " ";
 	cout << endl;
+	task4a_findGraphCenter(task4a);
 	cout << "----------------\n";
+
+	cout << "\nЗадание 9 (IVb)\n\n";
+
+	map<int, int> shortPaths = shortestPath_Dijkstra(task4, 0);
+	cout << "Кратчайшие пути из 0:\n";
+	for (pair<int, int> x : shortPaths)
+		cout << 0 << " -> " << x.first << " := " << x.second << endl;
 
 
 	//setupPanel();
