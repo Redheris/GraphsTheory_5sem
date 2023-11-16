@@ -223,8 +223,12 @@ set<int> task4a_findGraphCenter(Graph g) {
 
 		// Находим эксцентриситет для каждой вершины
 		int maxPath = 0;
-		for (auto edge : shortestPaths)
+		cout << "Кратчайшие пути из " << sourceVertex << ":\n";
+		for (auto edge : shortestPaths) {
+			cout << sourceVertex << " -> " << x.first << " := " << edge.second << endl;
 			maxPath = max(maxPath, edge.second);
+		}
+
 
 		// Сохраняем эксцентриситет в карту
 		radiusMap[sourceVertex] = maxPath;
@@ -232,6 +236,10 @@ set<int> task4a_findGraphCenter(Graph g) {
 		// Обновляем общий радиус графа
 		graphRadius = min(graphRadius, maxPath);
 	}
+
+	for (auto x : radiusMap)
+		cout << "Эксцентриситет в-ны " << x.first << " = " << x.second << endl;
+
 	cout << "Радиус графа: " << graphRadius << endl;
 
 	// Находим вершины с эксцентриситетом, равным радиусу графа
@@ -243,7 +251,7 @@ set<int> task4a_findGraphCenter(Graph g) {
 	return centerVertices;
 }
 
-map<int, int> shortestPath_bellmanFord(Graph g, int source)
+map<int, int> shortestPath_FordBellman(Graph g, int source)
 {
 	map<int, int> distance; // Карта для хранения длин кратчайших путей
 	vector<int> vertices;   // Вектор для хранения вершин графа
@@ -262,11 +270,11 @@ map<int, int> shortestPath_bellmanFord(Graph g, int source)
 	// Релаксация рёбер (|V| - 1) раз, где |V| - количество вершин в графе
 	for (int i = 1; i < vertices.size(); ++i)
 	{
-		for (auto const& entry : g.getAdjList())
+		for (auto entry : g.getAdjList())
 		{
 			int u = entry.first;
 
-			for (auto const& edge : entry.second)
+			for (auto edge : entry.second)
 			{
 				int v = get<0>(edge);
 				int weight = get<1>(edge);
@@ -280,7 +288,7 @@ map<int, int> shortestPath_bellmanFord(Graph g, int source)
 	}
 
 	// Проверка наличия отрицательных циклов
-	for (auto const& entry : g.getAdjList())
+	for (auto entry : g.getAdjList())
 	{
 		int u = entry.first;
 
@@ -299,6 +307,8 @@ map<int, int> shortestPath_bellmanFord(Graph g, int source)
 
 	return distance;
 }
+
+
 
 int main() {
 	SetConsoleOutputCP(CP_UTF8);
@@ -357,6 +367,7 @@ int main() {
 	cout << "task 1a2:\n";
 	task1b_upToNotOrient(task1).printList();
 
+	//============================================================================
 
 	Graph task21(true);
 	task21.addNode(4);
@@ -375,6 +386,8 @@ int main() {
 	cout << "\nИсходный граф:\n";
 	task21Result.printList();
 
+	//============================================================================
+
 	cout << "\nTask 6.2_2\n";
 
 	Graph task22(false);
@@ -390,15 +403,20 @@ int main() {
 	task22_2.addEdge(0,2);
 	task22_2.addEdge(1,2);
 
-	cout << "\nКоличество связных компонент task22: " << task2_2_countConnectedComponents(task22);
+	cout << "\nКоличество связных компонент task22: " <<
+		task2_2_countConnectedComponents(task22);
 
 	cout << "\nGraph task21:\n"; task21.printList();
 
-	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task21));
+	cout << "\nКоличество связных компонент task21: " <<
+		task2_2_countConnectedComponents(task1b_upToNotOrient(task21));
 
 	cout << "\nGraph task22_2:\n"; task22_2.printList();
 
-	cout << "\nКоличество связных компонент task21: " << task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
+	cout << "\nКоличество связных компонент task21: " <<
+		task2_2_countConnectedComponents(task1b_upToNotOrient(task22_2)) << endl;
+
+	//============================================================================
 
 	// Алгоритм Краскала работает только со связными неориентированными графами
 	Graph task3(false);
@@ -417,6 +435,8 @@ int main() {
 
 	minOstovTree_Kruskal(task3).printList();
 	
+	//============================================================================
+
 	cout << "\nGraph task4:\n";
 
 	Graph task4(true);
@@ -447,26 +467,71 @@ int main() {
 
 	cout << "\nЗадание 8 (IVa)\n\n";
 
+	// Вывод всех кратчайших путей из 0 в графе task4
 	map<int,int> shortPaths = shortestPath_Dijkstra(task4, 0);
 	cout << "Кратчайшие пути из 0:\n";
 	for (pair<int, int> x : shortPaths)
 		cout << 0 << " -> " << x.first << " := " << x.second << endl;
 	cout << "----------------\n";
+
+	// Вывод всех кратчайших путей из 0 в графе task4a
 	cout << "Кратчайшие пути из 0:\n";
 	shortPaths = shortestPath_Dijkstra(task4a, 0);
 	for (pair<int, int> x : shortPaths)
 		cout << 0 << " -> " << x.first << " := " << x.second << endl;
 	cout << endl;
-	task4a_findGraphCenter(task4a);
+	
+	// Вывод центра графа
+	set<int> center = task4a_findGraphCenter(task4a);
+	cout << "Центр графа: [ ";
+	for (int x : center) cout << x << " ";
+	cout << "]" << endl;
+
+	task4a.addEdge(0, 2, 7);
+	// Вывод центра графа
+	center = task4a_findGraphCenter(task4a);
+	cout << "Центр графа: [ ";
+	for (int x : center) cout << x << " ";
+	cout << "]" << endl;
+
 	cout << "----------------\n";
+
+	//============================================================================
 
 	cout << "\nЗадание 9 (IVb)\n\n";
 
-	map<int, int> shortPaths = shortestPath_Dijkstra(task4, 0);
-	cout << "Кратчайшие пути из 0:\n";
+	Graph task4c(true);
+	task4c.addNode(7);
+	task4c.addEdge(0, 1, 7);
+	task4c.addEdge(0, 2, -14);
+	task4c.addEdge(0, 5, 7);
+	task4c.addEdge(1, 3, -4);
+	task4c.addEdge(1, 6, 10);
+	task4c.addEdge(2, 3, -4);
+	task4c.addEdge(3, 2, 4);
+	task4c.addEdge(3, 4, 4);
+	task4c.addEdge(3, 6, 15);
+	task4c.addEdge(5, 2, 2);
+	task4c.addEdge(5, 4, -9);
+
+	task4c.printList();
+
+	int u  = 0,
+		v1 = 3,
+		v2 = 4;
+	cout << "Переменные из условия задания: u = " << u << ", v1 = " << v1 << ", v2 = " << v2 << endl;
+
+	shortPaths = shortestPath_FordBellman(task4c, 0);
+	cout << "Кратчайшие пути из " << u << ":\n";
 	for (pair<int, int> x : shortPaths)
 		cout << 0 << " -> " << x.first << " := " << x.second << endl;
 
+	cout << "\nДлины кратчайших путей из " << u << " до v1 и v2:" << endl;
+	cout << u << " -> " << v1 << " := " << shortPaths[v1] << endl;
+	cout << u << " -> " << v2 << " := " << shortPaths[v2] << endl;
+
+	//============================================================================
 
 	//setupPanel();
 }
+
