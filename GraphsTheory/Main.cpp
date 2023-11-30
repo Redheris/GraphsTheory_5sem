@@ -309,6 +309,46 @@ map<int, int> shortestPath_FordBellman(Graph g, int source)
 }
 
 
+// Алгоритм Флойда
+map<int, std::map<int, int>> floydWarshall(Graph g) {
+	auto adjList = g.getAdjList();
+
+	// Инициализация матрицы расстояний
+	map<int, map<int, int>> dist;
+	for (auto& x : adjList)
+		for (auto& y : adjList)
+			dist[x.first][y.first] = MAXINT;
+
+	// Заполнение матрицы расстояний из списка смежности
+	for (auto& x : adjList) {
+		dist[x.first][x.first] = 0;  // Расстояние от вершины до самой себя равно 0
+		for (auto& edge : x.second) {
+			int v = get<0>(edge);
+			int weight = get<1>(edge);
+			dist[x.first][x.first] = weight;
+		}
+	}
+
+	// Алгоритм Флойда
+	for (auto& m_entry : adjList) {
+		int m = m_entry.first;
+		for (auto& x_entry : adjList) {
+			int x = x_entry.first;
+			for (auto& y_entry : adjList) {
+				int y = y_entry.first;
+				// Проверка на бесконечность и обновление расстояния
+				if (dist[x][m] != MAXINT &&
+					dist[m][y] != MAXINT &&
+					dist[x][m] + dist[m][y] < dist[x][y])
+						dist[x][y] = dist[x][m] + dist[m][y];
+			}
+		}
+	}
+
+	return dist;
+}
+
+
 
 int main() {
 	SetConsoleOutputCP(CP_UTF8);
@@ -501,18 +541,14 @@ int main() {
 	cout << "\nЗадание 9 (IVb)\n\n";
 
 	Graph task4c(true);
-	task4c.addNode(7);
-	task4c.addEdge(0, 1, 7);
-	task4c.addEdge(0, 2, -14);
-	task4c.addEdge(0, 5, 7);
-	task4c.addEdge(1, 3, -4);
-	task4c.addEdge(1, 6, 10);
-	task4c.addEdge(2, 3, -4);
-	task4c.addEdge(3, 2, 4);
+	task4c.addNode(6);
+	task4c.addEdge(0, 1, 2);
+	task4c.addEdge(1, 2, 3);
+	task4c.addEdge(2, 3, 1);
 	task4c.addEdge(3, 4, 4);
-	task4c.addEdge(3, 6, 15);
-	task4c.addEdge(5, 2, 2);
-	task4c.addEdge(5, 4, -9);
+	task4c.addEdge(4, 5, 2);
+	task4c.addEdge(5, 0, 5);
+	task4c.addEdge(2, 0, -1);
 
 	task4c.printList();
 
@@ -531,6 +567,27 @@ int main() {
 	cout << u << " -> " << v2 << " := " << shortPaths[v2] << endl;
 
 	//============================================================================
+
+	cout << "\nЗадание 10 (IVc)\n\n";
+
+	Graph myGraph(true);
+	myGraph.addNode(6);
+
+	myGraph.addEdge(0, 1, 2);
+	myGraph.addEdge(1, 2, 3);
+	myGraph.addEdge(2, 3, 1);
+	myGraph.addEdge(3, 4, 4);
+	myGraph.addEdge(4, 5, 2);
+	myGraph.addEdge(5, 0, 5);
+	myGraph.addEdge(2, 0, -1);
+
+	// Вывод графа в консоль
+	myGraph.printList();
+
+	// Применение алгоритма Флойда
+	map<int, map<int, int>> allPairsShortestPaths = floydWarshall(myGraph);
+
+	
 
 	//setupPanel();
 }
