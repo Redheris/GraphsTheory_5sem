@@ -1,6 +1,7 @@
 #include <vector>
 #include <queue>
 #include <iostream>
+#include <iomanip>
 #include <windows.h>
 #include <string>
 #include "ConsolePanel.h"
@@ -288,15 +289,19 @@ map<int, int> shortestPath_FordBellman(Graph g, int source)
 	}
 
 	// Проверка наличия отрицательных циклов
+	// Проход по всем вершинам
 	for (auto entry : g.getAdjList())
 	{
 		int u = entry.first;
-
-		for (auto const& edge : entry.second)
+		// Проход по всем рёбрам от вершины u
+		for (auto& edge : entry.second)
 		{
-			int v = get<0>(edge);
-			int weight = get<1>(edge);
+			int v = get<0>(edge);		// Конец ребра
+			int weight = get<1>(edge);	// Вес ребра
 
+			// Проверка, что расстояние до точки u известно,
+			// а расстояние до точки v изменено на значение текущего ребра,
+			// то есть алгоритм попал в цикл
 			if (distance[u] != MAXINT && distance[u] + weight < distance[v])
 			{
 				cerr << "Граф содержит отрицательный цикл" << endl;
@@ -315,35 +320,46 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 
 	// Инициализация матрицы расстояний
 	map<int, map<int, int>> dist;
-	for (auto& x : adjList)
-		for (auto& y : adjList)
+	for (auto x : adjList)
+		for (auto y : adjList)
 			dist[x.first][y.first] = MAXINT;
 
 	// Заполнение матрицы расстояний из списка смежности
-	for (auto& x : adjList) {
-		dist[x.first][x.first] = 0;  // Расстояние от вершины до самой себя равно 0
-		for (auto& edge : x.second) {
+	for (auto x : adjList) {
+		for (auto edge : x.second) {
 			int v = get<0>(edge);
 			int weight = get<1>(edge);
-			dist[x.first][x.first] = weight;
+			dist[x.first][v] = weight;
 		}
+		dist[x.first][x.first] = 0;  // Расстояние от вершины до самой себя равно 0
 	}
 
 	// Алгоритм Флойда
-	for (auto& m_entry : adjList) {
+	for (auto m_entry : adjList) {
 		int m = m_entry.first;
-		for (auto& x_entry : adjList) {
+		for (auto x_entry : adjList) {
 			int x = x_entry.first;
-			for (auto& y_entry : adjList) {
+			for (auto y_entry : adjList) {
 				int y = y_entry.first;
 				// Проверка на бесконечность и обновление расстояния
-				if (dist[x][m] != MAXINT &&
-					dist[m][y] != MAXINT &&
-					dist[x][m] + dist[m][y] < dist[x][y])
-						dist[x][y] = dist[x][m] + dist[m][y];
+				if (dist[x][m] != MAXINT && dist[m][y] != MAXINT)
+					dist[x][y] = min(dist[x][y], dist[x][m] + dist[m][y]);
 			}
 		}
 	}
+
+	for (auto i_entry : adjList) {
+		int i = i_entry.first;
+		for (auto j_entry : adjList) {
+			int j = j_entry.first;
+			for (auto t_entry : adjList) {
+				int t = t_entry.first;
+				if (dist[i][t] < MAXINT && dist[t][t] < 0 && dist[t][j] < MAXINT)
+					dist[i][j] = -MAXINT;
+			}
+		}
+	}
+	
 
 	return dist;
 }
@@ -571,24 +587,54 @@ int main() {
 	cout << "\nЗадание 10 (IVc)\n\n";
 
 	Graph myGraph(true);
-	myGraph.addNode(6);
+	myGraph.addNode(8);
 
 	myGraph.addEdge(0, 1, 2);
 	myGraph.addEdge(1, 2, 3);
-	myGraph.addEdge(2, 3, 1);
+	myGraph.addEdge(2, 7, 3);
+	myGraph.addEdge(2, 5, 2);
 	myGraph.addEdge(3, 4, 4);
-	myGraph.addEdge(4, 5, 2);
+	myGraph.addEdge(3, 6, 0);
+	myGraph.addEdge(4, 7, -6);
 	myGraph.addEdge(5, 0, 5);
-	myGraph.addEdge(2, 0, -1);
+	myGraph.addEdge(7, 3, 1);
 
 	// Вывод графа в консоль
 	myGraph.printList();
 
+	set<pair<int, int>> mininf_paths; // Структура для сохранения бесконено малых путей
+
+	cout << "\nМатрица кратчайших путей:\n";
+
 	// Применение алгоритма Флойда
 	map<int, map<int, int>> allPairsShortestPaths = floydWarshall(myGraph);
+	// Названия столбцов
+	cout << " ";
+	for (auto x : allPairsShortestPaths)
+		cout << setw(7) << x.first;
+	// Вывод строк матрицы
+	for (auto x : allPairsShortestPaths) {
+		cout << "\n\n";
+		// Названия строки
+		cout << x.first;
+		// Веса путей
+		for (auto y : x.second) {
+			if (y.second == MAXINT)
+				cout << setw(7) << "-" << setw(3);
+			else if (y.second == -MAXINT) {
+				cout << setw(7) << "-INF" << setw(3);
+				// Добавление пути в список бесконечно малых
+				mininf_paths.insert(make_pair(x.first, y.first));
+			}
+			else
+				cout << setw(7) << y.second << setw(3);
+		}
+	}
 
-	
+	cout << "\n\nПары вершин, между которыми существует путь бесконечно малого веса:\n";
+	for (auto p : mininf_paths)
+		cout << "(" << p.first << " " << p.second << "), ";
 
-	//setupPanel();
+	setupPanel();
 }
 
