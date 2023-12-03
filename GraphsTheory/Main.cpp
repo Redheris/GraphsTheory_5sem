@@ -15,8 +15,6 @@ void task1a1_connectedTo(Graph& g, int x) {
 	cout << "task 1a1: ";
 	// Проход по всем вершинам
 	for (auto i : g.getAdjList()) {
-		// if (i.second.find(x) != i.second.end())
-		// 	cout << i.first << " ";
 
 		// Проход по всем рёбрам из вершины
 		for (auto y : i.second)
@@ -47,10 +45,6 @@ Graph task1b_upToNotOrient(Graph& g) {
 		return g;
 	Graph gNew(g);
 	auto tempEdges = g.getAdjList();
-	//for (auto edge : g.getAdjList()) {
-	//	//gNew.addEdge(edge.first.second, edge.first.first, edge.second.first, edge.second.second);
-	//	gNew.addEdge(edge.first, edge.second, get<1>(edge), get<2>(edge));
-	//}
 
 	// Проход по всем вершинам
 	for (auto x : g.getAdjList())
@@ -82,15 +76,6 @@ Graph task2_1(Graph g) {
 
 	reverse(res.begin(), res.end());
 
-
-	//for (int i = 0; i < res.size(); ++i) {
-	//	set<int> tempAdj;
-	//	for (auto y : oldAdj[i])
-	//		tempAdj.insert(res[y]);
-	//	resAdj[res[i]] = tempAdj;
-	//	/*resAdj.insert(make_pair(res[i], oldAdj[i]));*/
-	//}
-
 	// Обновление значений вершин в графе
 	for (int i : res) {
 		set<tuple<int, int, string>> tempAdj;
@@ -105,7 +90,8 @@ Graph task2_1(Graph g) {
 	return g;
 }
 
-void task2_2_BFS(Graph g, int v, vector<bool>& used) {
+vector<bool> task2_2_BFS(Graph g, int v) {
+	vector<bool> used(g.getAdjList().size(), false);
 	queue<int> q;
 	q.push(v);
 	used[v] = true;
@@ -121,6 +107,7 @@ void task2_2_BFS(Graph g, int v, vector<bool>& used) {
 			}
 		}
 	}
+	return used;
 }
 
 
@@ -130,7 +117,7 @@ int task2_2_countConnectedComponents(Graph g) {
 
 	for (auto x : g.getAdjList()) {
 		if (!used[x.first]) {
-			task2_2_BFS(g, x.first, used);
+			used = task2_2_BFS(g, x.first);
 			count++;
 		}
 	}
@@ -159,8 +146,6 @@ Graph minOstovTree_Kruskal(Graph g) {
 	for (auto x : oldAdjList) {
 		nodeComps[x.first] = compNum;
 		linkComps[compNum++].insert(x.first);
-		//nodeComps.insert(make_pair(x.first, compNum));
-		//linkComps.insert(compNum++, x.first);
 		for (auto y : x.second)
 			sortEdges.push_back(make_tuple(x.first, get<0>(y), get<1>(y), get<2>(y)));
 	}
@@ -364,6 +349,33 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 	return dist;
 }
 
+// Внешняя функция для алгоритма Форда-Фалкерсона
+int FordFulkerson(Graph& graph, int source, int sink) {
+	// Создаем остаточную сеть и устанавливаем начальные значения
+	Graph residualGraph = graph;
+	int maxFlow = 0;
+
+	// Пока существует увеличивающий путь
+	vector<bool> augmentingPath;
+	map<int, int> parent;
+
+	augmentingPath = task2_2_BFS(residualGraph, source);
+	while (!augmentingPath.empty()) {
+		// Найдем минимальную пропускную способность ребер на пути
+		int minCapacity = MAXINT;
+
+		// Увеличим поток вдоль пути на минимальную пропускную способность
+		maxFlow += minCapacity;
+		// Сбросим структуры данных для поиска следующего увеличивающего пути
+		parent.clear();
+
+		// Повторно получаем увеличивающий путь
+		augmentingPath = task2_2_BFS(residualGraph, source);
+	}
+
+	// Вернем максимальный поток
+	return maxFlow;
+}
 
 
 int main() {
@@ -567,7 +579,7 @@ int main() {
 	task4c.addEdge(2, 0, -1);
 
 	task4c.printList();
-
+	
 	int u  = 0,
 		v1 = 3,
 		v2 = 4;
@@ -586,28 +598,28 @@ int main() {
 
 	cout << "\nЗадание 10 (IVc)\n\n";
 
-	Graph myGraph(true);
-	myGraph.addNode(8);
+	Graph task4c1(true);
+	task4c1.addNode(8);
 
-	myGraph.addEdge(0, 1, 2);
-	myGraph.addEdge(1, 2, 3);
-	myGraph.addEdge(2, 7, 3);
-	myGraph.addEdge(2, 5, 2);
-	myGraph.addEdge(3, 4, 4);
-	myGraph.addEdge(3, 6, 0);
-	myGraph.addEdge(4, 7, -6);
-	myGraph.addEdge(5, 0, 5);
-	myGraph.addEdge(7, 3, 1);
+	task4c1.addEdge(0, 1, 2);
+	task4c1.addEdge(1, 2, 3);
+	task4c1.addEdge(2, 7, 3);
+	task4c1.addEdge(2, 5, 2);
+	task4c1.addEdge(3, 4, 4);
+	task4c1.addEdge(3, 6, 0);
+	task4c1.addEdge(4, 7, -6);
+	task4c1.addEdge(5, 0, 5);
+	task4c1.addEdge(7, 3, 1);
 
 	// Вывод графа в консоль
-	myGraph.printList();
+	task4c1.printList();
 
 	set<pair<int, int>> mininf_paths; // Структура для сохранения бесконено малых путей
 
 	cout << "\nМатрица кратчайших путей:\n";
 
 	// Применение алгоритма Флойда
-	map<int, map<int, int>> allPairsShortestPaths = floydWarshall(myGraph);
+	map<int, map<int, int>> allPairsShortestPaths = floydWarshall(task4c1);
 	// Названия столбцов
 	cout << " ";
 	for (auto x : allPairsShortestPaths)
@@ -634,6 +646,28 @@ int main() {
 	cout << "\n\nПары вершин, между которыми существует путь бесконечно малого веса:\n";
 	for (auto p : mininf_paths)
 		cout << "(" << p.first << " " << p.second << "), ";
+	cout << endl;
+
+	//============================================================================
+
+	cout << "\nЗадание 11 (V)\n\n";
+
+	Graph task5(true);  // Ориентированный граф
+	task5.addNode(7);
+	// Добавление рёбер
+	task5.addEdge(0, 1);
+	task5.addEdge(1, 2);
+	task5.addEdge(2, 3);
+	task5.addEdge(0, 4);
+	task5.addEdge(4, 5);
+	task5.addEdge(5, 2);
+	task5.addEdge(5, 6);
+
+	int source = 0;
+	int sink = 5;
+
+	/*int maxFlow = FordFulkerson(task10, source, sink);
+	cout << "Максимальный поток: " << maxFlow << endl;*/
 
 	setupPanel();
 }
