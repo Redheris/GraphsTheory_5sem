@@ -39,12 +39,14 @@ public:
 	// Вывод графа в консоль
 	void printList();
 
+	// Селекторы
+
 	void setAdjList(map<int, set<tuple<int, int, string>>> adjList);
 
-	// map<pair<int, int>, pair<int, string>> getEdgeChars();
-	// map<int, set<int>> getAdjList();
 	map<int, set<tuple<int, int, string>>> getAdjList();
 	bool getIsOriented();
+
+	// Конструкторы
 
 	Graph(bool isOriented);
 	Graph(const Graph& g);
