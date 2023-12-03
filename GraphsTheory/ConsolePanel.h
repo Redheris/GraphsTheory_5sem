@@ -68,8 +68,8 @@ void start() {
 				<< "- new <title> <1|true/0|false> :\n"
 				<< "\tсоздаёт новый граф с именем title, второй аргумент определяет\n"
 				<< "\tориентированность графа;\n"
-				<< "- edit <title> :\n"
-				<<  "\tвыбирает граф title для редактирования другими командами\n"
+				<< "- edit/end <title> :\n"
+				<<  "\tвыбирает граф title для редактирования (другими командами)\n"
 				<< "- list :\n"
 				<< "\tвыводит список записанных в памяти графов;\n"
 				<< "- delete/del <title> :\n"
@@ -77,14 +77,13 @@ void start() {
 				<< "- addNode [-n n] :\n"
 				<< "\tдобавляет в граф новую изолированную вершину,\n"
 				<< "\tn - количество добавляемых вершин, по умолчанию 1;\n"
-				<< "- addEdge <x> <y>  [-w weight | -m mark | -wm weight mark] :\n"
+				<< "- addEdge <x> <y>  [-w weight | -m mark | -wm weight mark | -mw mark weight] :\n"
 				<< "\tдобавляет в граф ребро из точки x в точку y,\n"
 				<< "\tweight и mark - вес и метка ребра соответственно;\n"
 				<< "- delNode <x> :\n"
 				<< "\tудаляет из графа узел x;\n"
-				<< "- delEdge [x y | -m mark] :\n"
-				<< "\tудаляет из графа ребро (x,y) или же все рёбра с\n"
-				<< "\tметкой mark;\n"
+				<< "- delEdge <x y | -m mark> :\n"
+				<< "\tудаляет из графа ребро (x,y) или же все рёбра с меткой mark;\n"
 				<< "- print <title | -e> :\n"
 				<< "\tвыводит информацию о графе title или о текущем\n"
 				<< "\t(ориентированность и список смежности)\n"
@@ -168,7 +167,16 @@ void start() {
 				else if (flag == "-mw")
 					cin >> mark >> weight;
 			}
-			getMemGraph(currentGraph).addEdge(x, y, weight, mark);
+
+			// Добавление ребра
+			try {
+				getMemGraph(currentGraph).addEdge(x, y, weight, mark);
+			}
+			catch (exception) {
+				cout << "В граф " << currentGraph << " не получилось добавить ребро (" << x << "," << y << ")" << ".\n";
+				continue;
+			}
+
 			string edgeChar = "";
 			if (weight != 0 || mark != "") {
 				edgeChar = " с характеристиками (" + to_string(weight);
@@ -185,7 +193,13 @@ void start() {
 			
 			if (checkCurrentIsNull()) continue;
 
-			getMemGraph(currentGraph).delNode(x);
+			try {
+				getMemGraph(currentGraph).delNode(x);
+			}
+			catch (exception) {
+				cout << "Из графа " << currentGraph << " не получилось удалить вершину " << x << ".\n";
+				continue;
+			}
 			cout << "Из графа " << currentGraph << " удалена вершина " << x << ".\n";
 		}
 		else if (cmd == "delEdge") {
@@ -199,14 +213,20 @@ void start() {
 				string mark;
 				cin >> mark;
 				g.delEdges(mark);
-				cout << "Из графа " << currentGraph << "удалены все рёбра с меткой " << mark << ".\n";
+				cout << "Из графа " << currentGraph << " удалены все рёбра с меткой " << mark << ".\n";
 			}
 			else {
 				int x, y;
 				x = stoi(flag);
 				cin >> y;
-				g.delEdge(x, y);
-				cout << "Из графа " << currentGraph << " удалено ребро (" << x << "," << y << ").\n";
+				try {
+					g.delEdge(x, y);
+					cout << "Из графа " << currentGraph << " удалено ребро (" << x << "," << y << ").\n";
+				}
+				catch (exception) {
+					cout << "Из графа " << currentGraph << " не получилось удалить ребро (" << x << "," << y << ").\n";
+					continue;
+				}
 			}
 		}
 		else if (cmd == "print") {
@@ -254,17 +274,15 @@ void start() {
 
 			if (!isExists(original) || !doOverride(title)) continue;
 
-
-
 			memGraphs.insert(make_pair(title, NULL));
 			getMemGraph(title) = getMemGraph(original);
-			cout << "Граф " << currentGraph << " успешно создан на основе графа " << original << ".\n";
+			cout << "Граф " << title << " успешно создан на основе графа " << original << ".\n";
 		}
 		else if (cmd == "exit" || cmd == "end") {
 			cout << "Консольный интерфейс закрыт.\n";
 		}
 		else
-			cout << "Неизвестная команда. Напишите help для полного списка имеющихся команд.\n";
+			cout << "Неизвестная команда. Напишите help для вывода полного списка имеющихся команд.\n";
 	}
 }
 
@@ -274,4 +292,3 @@ void setupPanel() {
 		<< "Для списка доступных команд напишите help, для выхода - exit.\n";
 	start();
 }
-
