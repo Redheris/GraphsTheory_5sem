@@ -355,26 +355,35 @@ int FordFulkerson(Graph& graph, int source, int sink) {
 	Graph residualGraph = graph;
 	int maxFlow = 0;
 
-	// Пока существует увеличивающий путь
-	vector<bool> augmentingPath;
-	map<int, int> parent;
 
-	augmentingPath = task2_2_BFS(residualGraph, source);
-	while (!augmentingPath.empty()) {
-		// Найдем минимальную пропускную способность ребер на пути
-		int minCapacity = MAXINT;
+bool bfs(map<int, set<tuple<int, int, string>>> graph, int parent[], int source, int sink) {
+	bool* visited = new bool[graph.size()];
+	memset(visited, 0, sizeof(visited));
 
-		// Увеличим поток вдоль пути на минимальную пропускную способность
-		maxFlow += minCapacity;
-		// Сбросим структуры данных для поиска следующего увеличивающего пути
-		parent.clear();
+	//vector<bool> visited(graph.size(), 0);
 
-		// Повторно получаем увеличивающий путь
-		augmentingPath = task2_2_BFS(residualGraph, source);
+	queue<int> q;
+	q.push(source);
+	visited[source] = true;
+	parent[source] = -1;
+
+	while (!q.empty()) {
+		int u = q.front();
+		q.pop();
+
+		for (auto edge : graph.at(u)) {
+			int v = get<0>(edge);
+			int weight = get<1>(edge);
+
+			if (!visited[v] && weight > 0) {
+				q.push(v);
+				parent[v] = u;
+				visited[v] = true;
+			}
+		}
 	}
 
-	// Вернем максимальный поток
-	return maxFlow;
+	return visited[sink];
 }
 
 
@@ -653,21 +662,30 @@ int main() {
 	cout << "\nЗадание 11 (V)\n\n";
 
 	Graph task5(true);  // Ориентированный граф
-	task5.addNode(7);
+	task5.addNode(6);
 	// Добавление рёбер
-	task5.addEdge(0, 1);
-	task5.addEdge(1, 2);
-	task5.addEdge(2, 3);
-	task5.addEdge(0, 4);
-	task5.addEdge(4, 5);
-	task5.addEdge(5, 2);
-	task5.addEdge(5, 6);
+	task5.addEdge(0, 1, 7);
+	task5.addEdge(0, 2, 4);
+	task5.addEdge(1, 2, 4);
+	task5.addEdge(1, 4, 2);
+	task5.addEdge(2, 3, 4);
+	task5.addEdge(2, 4, 8);
+	task5.addEdge(3, 5, 12);
+	task5.addEdge(4, 3, 4);
+	task5.addEdge(4, 5, 5);
+
+	// Ожидается ответ - 10
+	// https://habr.com/ru/articles/566248/
 
 	int source = 0;
 	int sink = 5;
 
-	/*int maxFlow = FordFulkerson(task10, source, sink);
-	cout << "Максимальный поток: " << maxFlow << endl;*/
+	int test[10];
+	 int maxFlow = findMaxFlow(task5, source, sink);
+	/*cout << "BFS: " << bfs(task5.getAdjList(), test, 5, 0) << endl;
+	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 2) << endl;
+	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 5) << endl;*/
+	// cout << "Максимальный поток: " << maxFlow << endl;
 
 	setupPanel();
 }
