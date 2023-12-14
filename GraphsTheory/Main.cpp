@@ -1,5 +1,6 @@
 #include <vector>
 #include <queue>
+#include <stack>
 #include <iostream>
 #include <iomanip>
 #include <windows.h>
@@ -332,7 +333,8 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 			}
 		}
 	}
-
+	
+	// Определение путей бесконечно малого веса (содержащих отрицательные циклы)
 	for (auto i_entry : adjList) {
 		int i = i_entry.first;
 		for (auto j_entry : adjList) {
@@ -348,42 +350,32 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 
 	return dist;
 }
+//ребро: x, y, cap, flow,
+//	   список (int, int)
 
-// Внешняя функция для алгоритма Форда-Фалкерсона
-int FordFulkerson(Graph& graph, int source, int sink) {
-	// Создаем остаточную сеть и устанавливаем начальные значения
-	Graph residualGraph = graph;
-	int maxFlow = 0;
+bool task11_StreamPathExists_dfs(map<int, set<pair<int, int>>> adjList,
+								 map<pair<int, int>, pair<int, int>> edgeChars,
+								 int source, int sink) {
+	vector<bool> visited(adjList.size(), false);
+	// Стек проходимых вершин
+	stack<int> v;
 
-
-bool bfs(map<int, set<tuple<int, int, string>>> graph, int parent[], int source, int sink) {
-	bool* visited = new bool[graph.size()];
-	memset(visited, 0, sizeof(visited));
-
-	//vector<bool> visited(graph.size(), 0);
-
-	queue<int> q;
-	q.push(source);
+	// Начало обхода - вершина source
+	for (auto start : adjList.at(source))
+		v.push(start.second);
 	visited[source] = true;
-	parent[source] = -1;
 
-	while (!q.empty()) {
-		int u = q.front();
-		q.pop();
-
-		for (auto edge : graph.at(u)) {
-			int v = get<0>(edge);
-			int weight = get<1>(edge);
-
-			if (!visited[v] && weight > 0) {
-				q.push(v);
-				parent[v] = u;
-				visited[v] = true;
+	// Проходимся по вершинам
+	while (!v.empty()) {
+		int next = v.top();
+		v.pop();
+		for (auto x : adjList.at(next)) {
+			if (!visited[x.first] && edgeChars[make_pair(next, x.first)]) {
+				visited[x.first] = true;
+				v.push(x.first);
 			}
 		}
 	}
-
-	return visited[sink];
 }
 
 
@@ -674,14 +666,16 @@ int main() {
 	task5.addEdge(4, 3, 4);
 	task5.addEdge(4, 5, 5);
 
+	// Исток - 0
+	// Сток  - 5
 	// Ожидается ответ - 10
 	// https://habr.com/ru/articles/566248/
 
 	int source = 0;
 	int sink = 5;
 
-	int test[10];
-	 int maxFlow = findMaxFlow(task5, source, sink);
+	 //int maxFlow = findMaxFlow(task5, source, sink);
+
 	/*cout << "BFS: " << bfs(task5.getAdjList(), test, 5, 0) << endl;
 	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 2) << endl;
 	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 5) << endl;*/
