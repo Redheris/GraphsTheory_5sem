@@ -353,8 +353,43 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 //ребро: x, y, cap, flow,
 //	   список (int, int)
 
+struct Edge {
+	int start;
+	int end;
+	int flow;
+	int capacity;
+
+	Edge(int s, int e, int w) {
+		this->start = s;
+		this->end = e;
+		this->flow = w;
+		this->capacity = 0;
+	}
+};
+vector<Edge> getEdgesList(map<int, set<tuple<int, int, string>>> adjList) {
+	vector<Edge> edges;
+	for (auto x : adjList)
+		for (auto edge : x.second)
+			edges.push_back(Edge(x.first, get<0>(edge), get<1>(edge)));
+			// изменить типа реультата функции и добавлять здесь значения в списки
+			// incoming и outcoming
+}
+
+//vector<int> getOutcoming(vector<Edge> edges, int x) {
+//	vector<int> verts;
+//	for (Edge edge : edges)
+//		if (edge.start == x)
+//}
+//
+//vector<int> getIncoming(vector<Edge> edges, int x) {
+//	vector<int> verts;
+//	for (Edge edge : edges)
+//		if (edge.start == x || edge.end == edge)
+//}
+
 bool task11_StreamPathExists_dfs(map<int, set<pair<int, int>>> adjList,
-								 map<pair<int, int>, pair<int, int>> edgeChars,
+								 map<pair<int, int>, pair<int, int>> edgeFlow,
+								 map<pair<int, int>, int> edgeCapacity,
 								 int source, int sink) {
 	vector<bool> visited(adjList.size(), false);
 	// Стек проходимых вершин
@@ -365,13 +400,25 @@ bool task11_StreamPathExists_dfs(map<int, set<pair<int, int>>> adjList,
 		v.push(start.second);
 	visited[source] = true;
 
+	vector<int> curPath;
+
 	// Проходимся по вершинам
 	while (!v.empty()) {
 		int next = v.top();
 		v.pop();
+		
+		// Сохранение пути и (минимального) значения потока в нём,
+		// проход по нему с изменением характеристик edgeChars
+		// ...
+
 		for (auto x : adjList.at(next)) {
-			if (!visited[x.first] && edgeChars[make_pair(next, x.first)]) {
+			if (!visited[x.first] // Ребро не посещалось
+					// Или flow ребра next->x 
+					|| (edgeChars[make_pair(next, x.first)].first > 0)
+					// Или у обратного ребро (x->next) есть запас (capacity)
+					|| (edgeChars[make_pair(x.first, next)].second > 0)) {
 				visited[x.first] = true;
+				curPath.push_back(x.first;
 				v.push(x.first);
 			}
 		}
