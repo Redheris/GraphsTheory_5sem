@@ -4,6 +4,7 @@
         "utility": "cpp",
         "iostream": "cpp",
         "chrono": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "xtree": "cpp"
     }
 }

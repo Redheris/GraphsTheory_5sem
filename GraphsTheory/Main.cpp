@@ -353,77 +353,108 @@ map<int, std::map<int, int>> floydWarshall(Graph g) {
 //ребро: x, y, cap, flow,
 //	   список (int, int)
 
-struct Edge {
-	int start;
-	int end;
-	int flow;
-	int capacity;
+// Define a new data structure to represent the flow network edges
+using FlowEdge = tuple<int, int, string, int, int>;
 
-	Edge(int s, int e, int w) {
-		this->start = s;
-		this->end = e;
-		this->flow = w;
-		this->capacity = 0;
-	}
-};
-vector<Edge> getEdgesList(map<int, set<tuple<int, int, string>>> adjList) {
-	vector<Edge> edges;
+// Function to convert the edges of the Graph class into a flow network representation
+vector<FlowEdge> convertToFlowNetwork(const map<int, set<tuple<int, int, string>>>& adjList)
+{
+	vector<FlowEdge> flowNetworkEdges;
+
 	for (auto x : adjList)
+	{
 		for (auto edge : x.second)
-			edges.push_back(Edge(x.first, get<0>(edge), get<1>(edge)));
-			// изменить типа реультата функции и добавлять здесь значения в списки
-			// incoming и outcoming
-}
+		{
+			int start = x.first;
+			int end = get<0>(edge);
+			string mark = get<2>(edge);
+			int flow = get<1>(edge); // Set flow to 0 initially
+			int capacity = 0; // Set capacity to 0 initially
 
-//vector<int> getOutcoming(vector<Edge> edges, int x) {
-//	vector<int> verts;
-//	for (Edge edge : edges)
-//		if (edge.start == x)
-//}
-//
-//vector<int> getIncoming(vector<Edge> edges, int x) {
-//	vector<int> verts;
-//	for (Edge edge : edges)
-//		if (edge.start == x || edge.end == edge)
-//}
-
-bool task11_StreamPathExists_dfs(map<int, set<pair<int, int>>> adjList,
-								 map<pair<int, int>, pair<int, int>> edgeFlow,
-								 map<pair<int, int>, int> edgeCapacity,
-								 int source, int sink) {
-	vector<bool> visited(adjList.size(), false);
-	// Стек проходимых вершин
-	stack<int> v;
-
-	// Начало обхода - вершина source
-	for (auto start : adjList.at(source))
-		v.push(start.second);
-	visited[source] = true;
-
-	vector<int> curPath;
-
-	// Проходимся по вершинам
-	while (!v.empty()) {
-		int next = v.top();
-		v.pop();
-		
-		// Сохранение пути и (минимального) значения потока в нём,
-		// проход по нему с изменением характеристик edgeChars
-		// ...
-
-		for (auto x : adjList.at(next)) {
-			if (!visited[x.first] // Ребро не посещалось
-					// Или flow ребра next->x 
-					|| (edgeChars[make_pair(next, x.first)].first > 0)
-					// Или у обратного ребро (x->next) есть запас (capacity)
-					|| (edgeChars[make_pair(x.first, next)].second > 0)) {
-				visited[x.first] = true;
-				curPath.push_back(x.first;
-				v.push(x.first);
-			}
+			// Add the edge to the flow network representation
+			flowNetworkEdges.emplace_back(start, end, mark, flow, capacity);
 		}
 	}
+
+	return flowNetworkEdges;
 }
+
+bool hasFlow(const vector<FlowEdge>& flowNetwork, int start, int end)
+{
+    vector<bool> visited(flowNetwork.size(), false);
+    stack<int> s;
+    s.push(start);
+    visited[start] = true;
+
+    while (!s.empty())
+    {
+        int curr = s.top();
+        s.pop();
+
+        if (curr == end)
+        {
+            return true; // Found a path with positive flow from start to end
+        }
+
+        for (int i = 0; i < flowNetwork.size(); i++)
+        {
+            const auto& edge = flowNetwork[i];
+            int edgeStart = get<0>(edge);
+            int edgeEnd = get<1>(edge);
+            int flow = get<3>(edge);
+            int capacity = get<4>(edge);
+
+            if (!visited[edgeEnd] && edgeStart == curr && flow < capacity)
+            {
+                s.push(edgeEnd);
+                visited[edgeEnd] = true;
+            }
+        }
+    }
+
+    return false; // No path with positive flow from start to end found
+}
+
+int findMaxFlow(const vector<FlowEdge>& flowNetwork, int source, int sink)
+{
+	// Initialize the residual capacity matrix
+	vector<vector<int>> residualCapacity(flowNetwork.size(), vector<int>(flowNetwork.size(), 0));
+	for (int i = 0; i < flowNetwork.size(); i++)
+	{
+		int start = get<0>(flowNetwork[i]);
+		int end = get<1>(flowNetwork[i]);
+		int capacity = get<4>(flowNetwork[i]);
+		residualCapacity[start][end] = capacity;
+	}
+
+	int maxFlow = 0;
+	while (hasFlow(flowNetwork, source, sink))
+	{
+		int pathFlow = INT_MAX;
+
+		// Find the minimum capacity along the augmenting path
+		for (int v = sink; v != source; v = get<0>(flowNetwork[v]))
+		{
+			int u = get<0>(flowNetwork[v]);
+			pathFlow = min(pathFlow, residualCapacity[u][v]);
+		}
+
+		// Update the residual capacities and reverse edges along the augmenting path
+		for (int v = sink; v != source; v = get<0>(flowNetwork[v]))
+		{
+			int u = get<0>(flowNetwork[v]);
+			residualCapacity[u][v] -= pathFlow;
+			residualCapacity[v][u] += pathFlow;
+		}
+
+		// Add the path flow to the total flow
+		maxFlow += pathFlow;
+	}
+
+	return maxFlow;
+}
+
+
 
 
 int main() {
@@ -721,12 +752,12 @@ int main() {
 	int source = 0;
 	int sink = 5;
 
-	 //int maxFlow = findMaxFlow(task5, source, sink);
+	int maxFlow = findMaxFlow(convertToFlowNetwork(task5.getAdjList()), 0, 5);
 
 	/*cout << "BFS: " << bfs(task5.getAdjList(), test, 5, 0) << endl;
 	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 2) << endl;
 	cout << "BFS: " << bfs(task5.getAdjList(), test, 0, 5) << endl;*/
-	// cout << "Максимальный поток: " << maxFlow << endl;
+	cout << "Максимальный поток: " << maxFlow << endl;
 
 	setupPanel();
 }
